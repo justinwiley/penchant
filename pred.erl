@@ -1,9 +1,16 @@
 -module(pred).
+-include("defs.hrl").
 
+
+-export([get_valences/0]).
 -export([sum/1]).
 -export([draw/1]).
 -export([rev/1]).
 -export([rev/2]).
+
+get_valences() ->
+  {_, Valences} = file:consult(?AFE),
+  Valences.
 
 % [] -> []
 % [x] -> [x]

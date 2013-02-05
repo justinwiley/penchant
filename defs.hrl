@@ -1,0 +1,1 @@
+-define(AFE,"afinn-erl.txt").
