@@ -1,1 +1,2 @@
 -define(AFE,"afinn-erl.txt").
+-define(VT,?MODULE).
