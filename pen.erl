@@ -6,16 +6,19 @@
 -export([get_valences/0]).
 -export([create_val_table/1]).
 -export([db/1]).
--export([find_score/1]).
--export([find_scores/1]).
+-export([word_score/1]).
+-export([sentence_scores/1]).
+-export([init_val_table/0]).
+-export([sentence_sentiment/1]).
 
-% db(Msg) when not is_list(Msg) ->
-%   io:format("~p ~n", [Msg]);
+
+sum([]) -> 0;
+sum([X | Rest]) ->
+  sum(Rest) + X.
+
 db(Msg) ->
   io:format("~p ~n", [string:join(Msg," ")]).
 
-% get valences which come in as [{valence, "Abandom", 2}...]
-% destructure to Val, Score for use with ets
 get_valences() ->
   {_, Valences} = file:consult(?AFE),
   db(["Loading valences"]),
@@ -27,24 +30,21 @@ create_val_table(Valences) ->
   [ ets:insert(valence_table, {Val, Score}) || {Val, Score} <- Valences ],
   ok.
 
-find_score(Valence) ->
+init_val_table() ->
+  create_val_table(get_valences()).
+
+word_score(Valence) ->
   case ets:lookup(valence_table, Valence) of
     [{_, Score}] ->
       Score;
     [] -> 0
   end.
 
-find_scores(String) ->
-  [ pen:find_score(Valence) || Valence <- string:tokens(String, " ") ].
+sentence_scores(String) ->
+  [ pen:word_score(Valence) || Valence <- string:tokens(String, " ") ].
 
-
-
-
-
-% -export([draw/1]).
-% -export([rev/1]).
-% -export([rev/2]).
-
+sentence_sentiment(String) ->
+  sum(sentence_scores(String)).
 
 % % [] -> []
 % % [x] -> [x]
@@ -64,11 +64,6 @@ find_scores(String) ->
 %   io:format("X: ~w, TheRest: ~w, Res: ~w ~n",[X, TheRest, Res]),
 %   rev(TheRest, [X | Res]).
 
-
-sum(0) -> 0;
-sum(N) ->
-  io:format("sum ~w.~n",[N]),
-  sum(N -1) + N.
 
 % draw(N) when N < 0 ->
 %   io:format("N < 1 ~w.~n",[N]),
