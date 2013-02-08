@@ -6,27 +6,38 @@
 -export([get_valences/0]).
 -export([create_val_table/1]).
 -export([db/1]).
-
+-export([find_score/1]).
+-export([find_scores/1]).
 
 % db(Msg) when not is_list(Msg) ->
 %   io:format("~p ~n", [Msg]);
-db(Msg) when is_list(Msg) ->
+db(Msg) ->
   io:format("~p ~n", [string:join(Msg," ")]).
-
 
 % get valences which come in as [{valence, "Abandom", 2}...]
 % destructure to Val, Score for use with ets
 get_valences() ->
   {_, Valences} = file:consult(?AFE),
-  db("Loading valences"),
+  db(["Loading valences"]),
   [ {Val, Score}  || {_, Val, Score} <- Valences ].
 
 create_val_table(Valences) ->
-  db("Creating valence table for "),
-  db(length(Valences)),
-  db("valences"),
-  ets:new(?VT),
-  [ ets:insert(?VT, {Val, Score}) || {Val, Score} <- Valences ]. 
+  db(["Creating valence table"]),
+  ets:new(valence_table, [public, named_table]),
+  [ ets:insert(valence_table, {Val, Score}) || {Val, Score} <- Valences ],
+  ok.
+
+find_score(Valence) ->
+  case ets:lookup(valence_table, Valence) of
+    [{_, Score}] ->
+      Score;
+    [] -> 0
+  end.
+
+find_scores(String) ->
+  [ pen:find_score(Valence) || Valence <- string:tokens(String, " ") ].
+
+
 
 
 
