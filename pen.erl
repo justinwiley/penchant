@@ -11,43 +11,27 @@
 -export([init_val_table/0]).
 -export([sentence_sentiment/1]).
 
--export([lookahead/1]).
-
-% lookahead([]) -> ok;
-% lookahead([X | Rest]) ->
-%   % {Next, Rest} = Tail,
-%   % io:format("chunk: ~p ~p~n", [X, Next]),
-%   lookahead(Rest).
+-export([by_three/1]).
 
 
-lookahead([]) -> [];
-lookahead([A]) ->
+by_three([]) -> [];
+by_three([A]) ->
   io:format("A ~p ~n", [A]);
-lookahead([A | Tail]) -> 
-  [B | _] = Tail,
-  io:format("A, B ~p, ~p ~n", [A,B]),
-  lookahead(Tail);
-lookahead([A, B | Tail]) -> 
-  [B, C | _] = Tail,
-  io:format("A, B, C ~p, ~p ~p ~n", [A,B,C]),
-  lookahead(Tail).
+by_three([A | Tail]) ->
+  case Tail of
+    [] -> [];
+    [B] ->
+      io:format("A, B ~p ~p ~n", [A, B]),
+      by_three(Tail);
+    [B, C | _] ->
+      io:format("A, B, C ~p ~p ~p ~n", [A,B,C]),
+      by_three(Tail);
+    [B | C] ->
+      io:format("A, B, C ~p ~p ~p ~n", [A,B,C]),
+      by_three(Tail)
+  end.
 
 
-
-
-% lookahead([A]) ->
-%   io:format("A ~p ~n", [A]);
-% lookahead([A, B | Tail]) ->
-%   io:format("A, B | Tail ~p, ~p, ~p ~n", [A,B,Tail]),
-%   lookahead(Tail);
-% lookahead([A | Tail]) -> 
-%   io:format("A | Tail ~p, ~p ~n", [A,Tail]),
-%   lookahead(Tail).
-% lookahead([]) ->
-%   [].
-% loop([A, B | TheRest]) -> two_or_more;
-
-% lookahead([]) -> 0.
 
 
 
