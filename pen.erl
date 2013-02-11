@@ -11,6 +11,46 @@
 -export([init_val_table/0]).
 -export([sentence_sentiment/1]).
 
+-export([lookahead/1]).
+
+% lookahead([]) -> ok;
+% lookahead([X | Rest]) ->
+%   % {Next, Rest} = Tail,
+%   % io:format("chunk: ~p ~p~n", [X, Next]),
+%   lookahead(Rest).
+
+
+lookahead([]) -> [];
+lookahead([A]) ->
+  io:format("A ~p ~n", [A]);
+lookahead([A | Tail]) -> 
+  [B | _] = Tail,
+  io:format("A, B ~p, ~p ~n", [A,B]),
+  lookahead(Tail);
+lookahead([A, B | Tail]) -> 
+  [B, C | _] = Tail,
+  io:format("A, B, C ~p, ~p ~p ~n", [A,B,C]),
+  lookahead(Tail).
+
+
+
+
+% lookahead([A]) ->
+%   io:format("A ~p ~n", [A]);
+% lookahead([A, B | Tail]) ->
+%   io:format("A, B | Tail ~p, ~p, ~p ~n", [A,B,Tail]),
+%   lookahead(Tail);
+% lookahead([A | Tail]) -> 
+%   io:format("A | Tail ~p, ~p ~n", [A,Tail]),
+%   lookahead(Tail).
+% lookahead([]) ->
+%   [].
+% loop([A, B | TheRest]) -> two_or_more;
+
+% lookahead([]) -> 0.
+
+
+
 
 sum([]) -> 0;
 sum([X | Rest]) ->
@@ -45,6 +85,7 @@ sentence_scores(String) ->
 
 sentence_sentiment(String) ->
   sum(sentence_scores(String)).
+
 
 % % [] -> []
 % % [x] -> [x]
